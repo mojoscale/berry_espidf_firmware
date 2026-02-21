@@ -1,0 +1,81 @@
+# ESP-IDF specific
+build/
+sdkconfig
+sdkconfig.old
+sdkconfig.defaults
+sdkconfig.defaults.old
+dependencies.lock
+managed_components/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+compile_commands.json
+.DS_Store
+*.pyc
+*.swp
+*.swo
+*~
+tags
+cscope.*
+*.orig
+*.part
+*.bin
+*.elf
+*.map
+*.hex
+*.log
+flash_args
+flash_args.in
+flash_project_args
+partition_table/
+bootloader/
+config/
+*.mem
+*.trace
+*.gcno
+*.gcda
+*.profraw
+*.profdata
+
+# IDE specific
+.vscode/
+.idea/
+.vs/
+*.swp
+*.swo
+*~
+.cproject
+.project
+.settings/
+.classpath
+.factorypath
+*.launch
+
+# Python
+__pycache__/
+*.py[cod]
+env/
+venv/
+.venv/
+.python-version
+.env
+dist/
+*.egg-info/
+
+# Git
+*.orig
+*.patch
+*.diff
+*.rej
+*.bak
+
+# Optional: Keep your main source, but ignore backups
+*.c~
+*.h~
+*.cpp~
+*.hpp~
+
+# Keep these if you want to track them
+# sdkconfig.defaults
+# sdkconfig.defaults.esp32
+# sdkconfig.ci
