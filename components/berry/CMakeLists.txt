@@ -10,6 +10,7 @@ idf_component_register(
         ${CMAKE_CURRENT_LIST_DIR}/src
         ${CMAKE_CURRENT_LIST_DIR}/generate
         ${CMAKE_CURRENT_LIST_DIR}/default
+    
 )
 
 target_compile_options(${COMPONENT_LIB} PRIVATE

@@ -1,2 +1,11 @@
-idf_component_register(SRCS "berry_espidf_project.c" "berry_runtime.c"
-                    INCLUDE_DIRS ".")
+idf_component_register(
+    SRCS
+        "berry_espidf_project.c"
+        "berry_runtime.c"
+    INCLUDE_DIRS "."
+    REQUIRES
+        berry
+        esp_partition
+        esp_system
+        heap
+)
