@@ -15,10 +15,10 @@ typedef struct {
     uint32_t length;
 } script_header_t;
 
-/* Optional external module registration */
-extern void berry_register_system(bvm *vm);
+/* External module registration */
+extern void register_system_module(bvm *vm);
 
-/* Keep VM global if you want persistent runtime */
+/* Global VM */
 static bvm *g_vm = NULL;
 
 
@@ -89,15 +89,17 @@ void berry_runtime_start(void)
         return;
     }
 
-    /* Register native modules */
-#ifdef berry_register_system
-    berry_register_system(g_vm);
-#endif
+
+
+    /* Register your custom modules */
+    register_system_module(g_vm);
 
     /* Compile script */
     if (be_loadstring(g_vm, script) != BE_OK) {
         ESP_LOGE(TAG, "Compile error: %s", be_tostring(g_vm, -1));
         be_pop(g_vm, 1);
+        be_vm_delete(g_vm);
+        g_vm = NULL;
         free(script);
         return;
     }
@@ -106,11 +108,28 @@ void berry_runtime_start(void)
     if (be_pcall(g_vm, 0) != BE_OK) {
         ESP_LOGE(TAG, "Runtime error: %s", be_tostring(g_vm, -1));
         be_pop(g_vm, 1);
+        be_vm_delete(g_vm);
+        g_vm = NULL;
+        free(script);
+        return;
     }
 
     free(script);
 
-    ESP_LOGI(TAG, "Berry script executed");
+    ESP_LOGI(TAG, "Berry script executed successfully");
+}
+
+
+/* ------------------------------------------------------------
+   Optional: Stop runtime
+------------------------------------------------------------ */
+void berry_runtime_stop(void)
+{
+    if (g_vm) {
+        be_vm_delete(g_vm);
+        g_vm = NULL;
+        ESP_LOGI(TAG, "Berry VM stopped");
+    }
 }
 
 
@@ -119,13 +138,16 @@ void berry_runtime_start(void)
 ------------------------------------------------------------ */
 void berry_call(const char *func_name)
 {
-    if (!g_vm) return;
+    if (!g_vm) {
+        ESP_LOGW(TAG, "VM not running");
+        return;
+    }
 
     be_getglobal(g_vm, func_name);
 
     if (!be_isfunction(g_vm, -1)) {
-        be_pop(g_vm, 1);
         ESP_LOGW(TAG, "Function not found: %s", func_name);
+        be_pop(g_vm, 1);
         return;
     }
 
